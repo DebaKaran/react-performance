@@ -1,16 +1,23 @@
-import { Outlet } from 'react-router-dom'
-import './App.css'
-import Header from './components/Header'
+import { Routes, Route, Link } from "react-router-dom";
 
-function App() {
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+
+export default function App() {
   return (
-    <>
-      <Header />
-      <main className="py-4 px-4 md:px-8">
-        <Outlet />
-      </main>
-    </>
-  )
-}
+    <div>
+      <nav>
+        <Link to="/">Home</Link> |{" "}
+        <Link to="/login">Login</Link> |{" "}
+        <Link to="/dashboard">Dashboard</Link>
+      </nav>
 
-export default App
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Routes>
+    </div>
+  );
+}
