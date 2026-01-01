@@ -73,3 +73,65 @@ Each route chunk is loaded only when its route is rendered.
 3: Reduced unused code download
 
 4: Better scalability as routes grow
+
+--
+
+## Per-Route Suspense for Better Navigation UX
+
+This project uses per-route Suspense boundaries instead of a single global boundary to improve user experience during route navigation.
+
+## Why Not Global Suspense?
+
+Wrapping all routes with a single Suspense boundary causes the entire page to re-render the fallback UI whenever a lazy-loaded route is fetched.
+
+This can:
+
+1: Hide persistent UI like navigation bars
+
+2: Feel like a full page reload
+
+3: Negatively impact perceived performance
+
+## Per-Route Suspense Approach
+
+Each route is wrapped in its own Suspense boundary, ensuring that only the route content area displays a loading state while shared layout remains visible.
+
+## Implementation Example
+
+<Routes>
+  <Route
+    path="/"
+    element={
+      <Suspense fallback={<h3>Loading Home...</h3>}>
+        <Home />
+      </Suspense>
+    }
+  />
+  <Route
+    path="/login"
+    element={
+      <Suspense fallback={<h3>Loading Login...</h3>}>
+        <Login />
+      </Suspense>
+    }
+  />
+  <Route
+    path="/dashboard"
+    element={
+      <Suspense fallback={<h3>Loading Dashboard...</h3>}>
+        <Dashboard />
+      </Suspense>
+    }
+  />
+</Routes>
+
+
+## Benefits
+
+1: Prevents full-page loading flashes during navigation
+
+2: Keeps shared UI (navigation, layout) mounted
+
+3: Improves perceived performance and LCP
+
+4: Scales better as routes grow

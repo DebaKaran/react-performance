@@ -14,13 +14,33 @@ export default function App() {
         <Link to="/dashboard">Dashboard</Link>
       </nav>
 
-      <Suspense fallback={<h3>Loading...</h3>}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-        </Routes>
-      </Suspense>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Suspense fallback={<h3>Loading Home...</h3>}>
+              <Home />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <Suspense fallback={<h3>Loading Login...</h3>}>
+              <Login />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            <Suspense fallback={<h3>Loading Dashboard...</h3>}>
+              <Dashboard />
+            </Suspense>
+          }
+        />
+      </Routes>
+
     </div>
   );
 }
