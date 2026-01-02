@@ -135,3 +135,90 @@ Each route is wrapped in its own Suspense boundary, ensuring that only the route
 3: Improves perceived performance and LCP
 
 4: Scales better as routes grow
+
+--
+## Layout-Level Suspense for Scalable Route Loading
+
+In larger applications, this project places the Suspense boundary at the layout level, wrapping React Router’s <Outlet />, instead of using a global or per-route Suspense.
+
+This ensures that only the route content area displays a loading state while shared UI (navigation, layout) remains mounted.
+
+## Why Layout-Level Suspense?
+
+Using a global Suspense boundary causes the entire page to be replaced by a fallback UI during route navigation, which can feel like a full page reload.
+
+Placing Suspense around the <Outlet /> provides a better user experience by:
+
+A: Keeping shared layout visible during navigation
+
+B: Avoiding full-page loading flashes
+
+C: Improving perceived performance and LCP
+
+## Architecture Overview
+
+AppLayout
+ ├─ Navbar        (persistent)
+ ├─ Sidebar       (persistent)
+ └─ Suspense
+     └─ Outlet    (lazy-loaded route content)
+
+Only the content rendered inside <Outlet /> suspends while route chunks are fetched.
+
+## Implementation Example
+
+// AppLayout.jsx
+import { Outlet } from "react-router-dom";
+import { Suspense, Link } from "react";
+
+export default function AppLayout() {
+  return (
+    <>
+       <nav>
+        <Link to="/">Home</Link> |{" "}
+        <Link to="/login">Login</Link> |{" "}
+        <Link to="/dashboard">Dashboard</Link>
+       </nav>
+
+      <Suspense fallback={<h3>Loading page...</h3>}>
+        <Outlet />
+      </Suspense>
+    </>
+  );
+}
+
+// App.jsx
+import { Routes, Route } from "react-router-dom";
+import React from "react";
+import AppLayout from "./AppLayout";
+
+const Home = React.lazy(() => import("./pages/Home"));
+const Login = React.lazy(() => import("./pages/Login"));
+const Dashboard = React.lazy(() => import("./pages/Dashboard"));
+
+export default function App() {
+  return (
+    <Routes>
+      <Route element={<AppLayout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Route>
+    </Routes>
+  );
+}
+
+
+## Benefits
+
+A: No full page reloads during navigation
+
+B: Shared layout remains mounted
+
+C: Loading states are isolated to route content
+
+D: Better scalability as routes grow
+
+E: Cleaner and centralized Suspense management
+
+Place Suspense as close as possible to the async boundary (<Outlet />) so that only the parts of the UI that truly need to wait are blocked.
