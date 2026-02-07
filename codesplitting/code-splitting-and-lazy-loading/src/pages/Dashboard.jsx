@@ -1,16 +1,19 @@
 import { useState } from "react";
 
-import { todosData as todos } from "../datas/todos";
-
 export default function Dashboard() {
   const [todosList, setTodosList] = useState([]);
 
+  const handleOnClick = async () => {
+    // Simulate a delay to fetch data
+    const module = await import("../datas/todos");
+    setTodosList(module.todosData);
+  }
   return (
     <>
       <h2>Dashboard Page</h2>
 
-      <button onClick={() => setTodosList(todos)}>
-        Load Todos
+      <button onClick={handleOnClick}>
+        Load Todos (Lazy)
       </button>
 
       <ul>
