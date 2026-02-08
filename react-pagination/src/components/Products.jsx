@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import { PAGE_SIZE } from "../utilities/constants";
 import Pagination from "./Pagination";
+import usePagination from "../hooks/usePagination";
 
 const Products = () => {
   // Holds the list of products fetched from the API
   const [products, setProducts] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1); // For pagination
 
   useEffect(() => {
     /*
@@ -34,24 +34,16 @@ const Products = () => {
     fetchProducts();
   }, []); // Empty dependency array => runs only once on initial render
 
-  const totalPages = Math.ceil(products.length / PAGE_SIZE);
-  const startIndex = (currentPage - 1) * PAGE_SIZE;
-  const endIndex = startIndex + PAGE_SIZE;
-  const currentProducts = products.slice(startIndex, endIndex);
+  const {
+    currentPage,
+    totalPages,
+    currentItems: currentProducts,
+    goToPage,
+    goToPrev,
+    goToNext
+  } = usePagination(products, PAGE_SIZE);
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page + 1); // page is 0-indexed, we want 1-indexed
-  }
 
- // Go to previous page (but not below 1)
-  const handlePrev = () => {
-    setCurrentPage((prev) => Math.max(prev - 1, 1));
-  };
-
-  // Go to next page (but not beyond totalPages)
-  const handleNext = () => {
-    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-  };
   // Conditional rendering for empty state
   return !products.length ? (
     <h1>No Product Found</h1>
@@ -76,9 +68,9 @@ const Products = () => {
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages} 
-        handlePageChange={handlePageChange}
-        handlePrev={handlePrev}
-        handleNext={handleNext}
+        handlePageChange={p => goToPage(p)}
+        handlePrev={goToPrev}
+        handleNext={goToNext}
       />
       
     </div>
