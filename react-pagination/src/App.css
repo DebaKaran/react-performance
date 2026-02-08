@@ -23,12 +23,29 @@
   justify-content: center;
 }
 
-.page-cumber {
-  padding: 5px;
-  margin: 2px;
-  border: 1px solid black;
+.pagination-container {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
 }
 
-.pagination-container {
-  padding: 20px;
+.page-number,
+.page-arrow {
+  cursor: pointer;
+  padding: 6px 10px;
+  border: 1px solid black;
+  user-select: none;
+}
+
+.page-number.active {
+  background-color: black;
+  color: white;
+  font-weight: bold;
+}
+
+.page-arrow:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }

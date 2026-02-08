@@ -43,6 +43,15 @@ const Products = () => {
     setCurrentPage(page + 1); // page is 0-indexed, we want 1-indexed
   }
 
+  // Go to previous page (but not below 1)
+  const handlePrev = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  // Go to next page (but not beyond totalPages)
+  const handleNext = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
   // Conditional rendering for empty state
   return !products.length ? (
     <h1>No Product Found</h1>
@@ -66,9 +75,28 @@ const Products = () => {
       </div>
 
       <div className="pagination-container"> 
+        {/* Left Arrow */}
+        <button
+          onClick={handlePrev}
+          disabled={currentPage === 1}
+          className="page-arrow"
+        >
+          ◀
+        </button>
         {[...Array(totalPages)].map((_, i) => (
-          <span key={i} className="page-cumber" onClick={() => handlePageChange(i)}>{i + 1}</span>
+          <span key={i} className={`page-number ${
+        currentPage === i + 1 ? "active" : ""
+      }`} onClick={() => handlePageChange(i)}>{i + 1}</span>
         ))}
+
+         {/* Right Arrow */}
+        <button
+          onClick={handleNext}
+          disabled={currentPage === totalPages}
+          className="page-arrow"
+        >
+          ▶
+        </button>
       </div>
     </div>
   );
