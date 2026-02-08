@@ -22,3 +22,13 @@
   flex-wrap: wrap;
   justify-content: center;
 }
+
+.page-cumber {
+  padding: 5px;
+  margin: 2px;
+  border: 1px solid black;
+}
+
+.pagination-container {
+  padding: 20px;
+}

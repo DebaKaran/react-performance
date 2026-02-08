@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 
+const PAGE_SIZE = 10; // Number of products per page
+
 const Products = () => {
   // Holds the list of products fetched from the API
   const [products, setProducts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1); // For pagination
 
   useEffect(() => {
     /*
@@ -31,15 +34,24 @@ const Products = () => {
     fetchProducts();
   }, []); // Empty dependency array => runs only once on initial render
 
+  const totalPages = Math.ceil(products.length / PAGE_SIZE);
+  const startIndex = (currentPage - 1) * PAGE_SIZE;
+  const endIndex = startIndex + PAGE_SIZE;
+  const currentProducts = products.slice(startIndex, endIndex);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page + 1); // page is 0-indexed, we want 1-indexed
+  }
+
   // Conditional rendering for empty state
   return !products.length ? (
     <h1>No Product Found</h1>
   ) : (
     <div className="App">
-      <h1>Total Products: {products.length}</h1>
-
+      <h1>Pagination</h1>
+      
       <div className="products-container">
-        {products.map((p) => (
+        {currentProducts.map((p) => (
           /*
             ProductCard is kept dumb/presentational:
             - It only receives data
@@ -50,6 +62,12 @@ const Products = () => {
             image={p.thumbnail}
             title={p.title}
           />
+        ))}
+      </div>
+
+      <div className="pagination-container"> 
+        {[...Array(totalPages)].map((_, i) => (
+          <span key={i} className="page-cumber" onClick={() => handlePageChange(i)}>{i + 1}</span>
         ))}
       </div>
     </div>
