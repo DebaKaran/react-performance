@@ -7,7 +7,7 @@
 const ProductCard = ({image, title}) => {
   return (
     <div className='product-card'>
-        <img src={image} alt={title} className='product-img'/>
+        <img src={image} alt={title} loading="lazy" className='product-img'/>
         <span>{title}</span>
     </div>
   )
