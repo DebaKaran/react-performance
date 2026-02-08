@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
-
-const PAGE_SIZE = 10; // Number of products per page
+import { PAGE_SIZE } from "../utilities/constants";
+import Pagination from "./Pagination";
 
 const Products = () => {
   // Holds the list of products fetched from the API
@@ -43,7 +43,7 @@ const Products = () => {
     setCurrentPage(page + 1); // page is 0-indexed, we want 1-indexed
   }
 
-  // Go to previous page (but not below 1)
+ // Go to previous page (but not below 1)
   const handlePrev = () => {
     setCurrentPage((prev) => Math.max(prev - 1, 1));
   };
@@ -73,31 +73,14 @@ const Products = () => {
           />
         ))}
       </div>
-
-      <div className="pagination-container"> 
-        {/* Left Arrow */}
-        <button
-          onClick={handlePrev}
-          disabled={currentPage === 1}
-          className="page-arrow"
-        >
-          ◀
-        </button>
-        {[...Array(totalPages)].map((_, i) => (
-          <span key={i} className={`page-number ${
-        currentPage === i + 1 ? "active" : ""
-      }`} onClick={() => handlePageChange(i)}>{i + 1}</span>
-        ))}
-
-         {/* Right Arrow */}
-        <button
-          onClick={handleNext}
-          disabled={currentPage === totalPages}
-          className="page-arrow"
-        >
-          ▶
-        </button>
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages} 
+        handlePageChange={handlePageChange}
+        handlePrev={handlePrev}
+        handleNext={handleNext}
+      />
+      
     </div>
   );
 };
