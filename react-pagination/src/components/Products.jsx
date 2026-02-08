@@ -1,39 +1,30 @@
-import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import { PAGE_SIZE } from "../utilities/constants";
 import Pagination from "./Pagination";
 import usePagination from "../hooks/usePagination";
+import useFetchData from "../hooks/useFetchData";
 
 const Products = () => {
-  // Holds the list of products fetched from the API
-  const [products, setProducts] = useState([]);
+  /*
+    useFetchData handles:
+    - API call
+    - loading state
+    - error state
 
-  useEffect(() => {
-    /*
-      Why fetchProducts is INSIDE useEffect?
+    Products component does NOT care how data is fetched,
+    only that it receives data to render.
+  */
+  const { data: apiData, loading, error } =
+    useFetchData("https://dummyjson.com/products");
 
-      - useEffect is meant for side-effects (API calls, subscriptions, timers).
-      - Defining the async function inside ensures:
-        1. It runs only when this effect runs
-        2. No accidental re-creation or dependency issues
-        3. ESLint doesn't warn about setState inside effects
-    */
-    const fetchProducts = async () => {
-      // Calling external API (side-effect)
-      const data = await fetch("https://dummyjson.com/products");
+  // Safely extract products from API response
+  // Prevents crashes during initial render before data arrives
+  const products = apiData.products || [];
 
-      // Converting response to JSON
-      const jsonData = await data.json();
-
-      // Updating React state AFTER data is received
-      // This triggers a re-render with the fetched products
-      setProducts(jsonData.products);
-    };
-
-    // Trigger the API call when component mounts
-    fetchProducts();
-  }, []); // Empty dependency array => runs only once on initial render
-
+  /*
+    usePagination is responsible only for pagination behavior.
+    It is completely independent of how data is fetched.
+  */
   const {
     currentPage,
     totalPages,
@@ -43,20 +34,31 @@ const Products = () => {
     goToNext
   } = usePagination(products, PAGE_SIZE);
 
+  // Handle loading state explicitly
+  if (loading) {
+    return <h1>Loading products...</h1>;
+  }
 
-  // Conditional rendering for empty state
-  return !products.length ? (
-    <h1>No Product Found</h1>
-  ) : (
+  // Handle error state explicitly
+  if (error) {
+    return <h1>Error: {error}</h1>;
+  }
+
+  // Empty state (data fetched but no products available)
+  if (!products.length) {
+    return <h1>No Product Found</h1>;
+  }
+
+  return (
     <div className="App">
       <h1>Pagination</h1>
-      
+
       <div className="products-container">
         {currentProducts.map((p) => (
           /*
-            ProductCard is kept dumb/presentational:
-            - It only receives data
-            - No business logic inside
+            ProductCard is a presentational component:
+            - Receives data via props
+            - Contains no business logic
           */
           <ProductCard
             key={p.id}
@@ -65,14 +67,15 @@ const Products = () => {
           />
         ))}
       </div>
+
+      {/* Pagination component handles only UI interactions */}
       <Pagination
         currentPage={currentPage}
-        totalPages={totalPages} 
-        handlePageChange={p => goToPage(p)}
+        totalPages={totalPages}
+        handlePageChange={(p) => goToPage(p)}
         handlePrev={goToPrev}
         handleNext={goToNext}
       />
-      
     </div>
   );
 };
