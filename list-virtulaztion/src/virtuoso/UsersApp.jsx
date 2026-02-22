@@ -12,7 +12,7 @@ const UsersApp = () => {
             <button style={{ margin: 40, background: "yellow" }}
                 onClick={() => virtuosoRef.current?.scrollToIndex({
                     index: Math.random() * users.length,
-                    align: "start"
+                    textAlign: "left"
                 })}>Scroll</button>
             <TableVirtuoso ref={virtuosoRef}
                 style={{ height: '600px' }} data={users}
