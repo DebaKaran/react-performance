@@ -1,6 +1,8 @@
 const UserCard = ({ user }) => {
-    return (
-        <div>{user.name}</div>
+    return (<>
+        <td>{user.id}</td>
+        <td>{user.name}</td>
+    </>
     )
 }
 

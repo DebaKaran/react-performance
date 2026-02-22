@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { createUsers } from './createUsers'
-import { Virtuoso } from 'react-virtuoso'
+import { TableVirtuoso } from 'react-virtuoso'
 import UserCard from './UserCard';
 
 const UsersApp = () => {
@@ -14,10 +14,15 @@ const UsersApp = () => {
                     index: Math.random() * users.length,
                     align: "start"
                 })}>Scroll</button>
-            <Virtuoso ref={virtuosoRef}
-                style={{ height: '600px' }} data={users} itemContent={(_, user) =>
-                    <UserCard user={user} />
-                }
+            <TableVirtuoso ref={virtuosoRef}
+                style={{ height: '600px' }} data={users}
+                itemContent={(_, user) => <UserCard user={user} />}
+                fixedHeaderContent={() => (
+                    <tr>
+                        <th style={{ width: 150, background: 'gray', align: self }}>Id</th>
+                        <th style={{ width: 150, background: 'gray', align: self }}>Name</th>
+                    </tr>
+                )}
             />
         </div>
     )
