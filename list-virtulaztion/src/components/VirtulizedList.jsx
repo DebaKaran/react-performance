@@ -29,7 +29,8 @@ const VirtulizedList = ({ list, height, width, itemHeight }) => {
                         <div className='item' key={item} style={{
                             height: itemHeight,
                             background: "coral",
-                            borderTop: "5px solid grey"
+                            borderTop: "5px solid grey",
+                            boxSizing: 'border-box'
                         }}>
                             {
                                 "Item: " + item
