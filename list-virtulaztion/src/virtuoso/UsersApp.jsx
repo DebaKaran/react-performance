@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { createUsers } from './createUsers'
+import { Virtuoso } from 'react-virtuoso'
 import UserCard from './UserCard';
 
 const UsersApp = () => {
@@ -7,9 +8,10 @@ const UsersApp = () => {
 
     return (
         <div>
-            {users.map((user) => (
-                <UserCard key={user.id} user={user} />
-            ))}
+            <Virtuoso style={{ height: '600px' }} data={users} itemContent={(_, user) =>
+                <UserCard user={user} />
+            }
+            />
         </div>
     )
 }
