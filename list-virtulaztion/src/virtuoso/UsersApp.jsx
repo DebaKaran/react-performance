@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { createUsers } from './createUsers'
+import UserCard from './UserCard';
 
 const UsersApp = () => {
     const [users, setUsers] = useState(createUsers);
