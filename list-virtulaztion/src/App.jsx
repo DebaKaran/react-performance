@@ -8,7 +8,7 @@ function App() {
   //   <VirtulizedList list={LIST} height={400} width={300} itemHeight={35} />
   // )
 
-  return <UsersApp />
+  return <UsersApp pageLength={20} />
 }
 
 export default App
